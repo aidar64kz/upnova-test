@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import HomeButton from 'components/HomeButton'
 import { motion, AnimatePresence } from 'motion/react'
 import { Mail, Lock } from 'lucide-react'
 
@@ -144,7 +145,10 @@ export default function Task2({
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
+    <div className="relative flex min-h-screen items-center justify-center bg-gray-50 p-4">
+      <div className="absolute left-4 top-4">
+        <HomeButton />
+      </div>
       <div className="w-full max-w-2xl">
         {/* Icon Circle */}
         <motion.div
@@ -210,7 +214,9 @@ export default function Task2({
                           className={`absolute inset-0 z-20 rounded-2xl ${
                             isError
                               ? 'border-4 border-red-500'
-                              : 'border-4 border-blue-500'
+                              : isSuccess
+                                ? 'border-4 border-green-500'
+                                : 'border-4 border-blue-500'
                           }`}
                           transition={{
                             type: 'spring',

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import HomeButton from 'components/HomeButton'
 import { CartChainEventManager } from 'utils/cartChainEventManager'
 import {
   mockFetchCart,
@@ -110,12 +110,7 @@ function Task1() {
             >
               Reset
             </button>
-            <Link
-              to="/"
-              className="rounded-md border border-gray-300 bg-white px-6 py-3 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            >
-              Back to Home
-            </Link>
+            <HomeButton />
           </div>
 
           {cart && (

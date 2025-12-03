@@ -1,6 +1,6 @@
 import type { FormEvent } from 'react'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import HomeButton from 'components/HomeButton'
 import { CopilotSidebar } from '@copilotkit/react-ui'
 import { useCopilotAction, useCopilotReadable } from '@copilotkit/react-core'
 import type { Todo, UserPreferences, WeatherData } from 'types/task3'
@@ -24,7 +24,7 @@ function reviveTodos(raw: unknown): Todo[] {
   return raw
     .map((item) => {
       if (!item || typeof item !== 'object') return null
-      const anyItem = item as any
+      const anyItem = item as Todo
       if (typeof anyItem.title !== 'string' || typeof anyItem.id !== 'string') {
         return null
       }
@@ -42,60 +42,61 @@ function Task3() {
   const [todos, setTodos] = useState<Todo[]>([])
   const [newTitle, setNewTitle] = useState('')
   const [destination, setDestination] = useState('')
-  const [userPreferences, setUserPreferences] = useState<UserPreferences>(
-    defaultPreferences
-  )
+  const [userPreferences, setUserPreferences] =
+    useState<UserPreferences>(defaultPreferences)
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null)
   const [isFetchingWeather, setIsFetchingWeather] = useState(false)
   const [weatherError, setWeatherError] = useState<string | null>(null)
 
-	// Hydrate from localStorage on mount
-	useEffect(() => {
-		if (typeof window === 'undefined') return
+  // Hydrate from localStorage on mount
+  useEffect(() => {
+    if (typeof window === 'undefined') return
 
-		// Todos
-		try {
-			const rawTodos = window.localStorage.getItem(TODOS_STORAGE_KEY)
-			if (rawTodos) {
-				const parsed = JSON.parse(rawTodos)
-				setTodos(reviveTodos(parsed))
-			}
-		} catch {
-			// Ignore corrupted todos; start with an empty list
-		}
+    // Todos
+    try {
+      const rawTodos = window.localStorage.getItem(TODOS_STORAGE_KEY)
+      if (rawTodos) {
+        const parsed = JSON.parse(rawTodos)
+        setTodos(reviveTodos(parsed))
+      }
+    } catch {
+      // Ignore corrupted todos; start with an empty list
+    }
 
-		// User preferences
-		try {
-			const rawPrefs = window.localStorage.getItem(PREFERENCES_STORAGE_KEY)
-			if (rawPrefs) {
-				const parsedPrefs = JSON.parse(rawPrefs) as UserPreferences
-				setUserPreferences({ ...defaultPreferences, ...parsedPrefs })
-			}
-		} catch {
-			// Ignore corrupted preferences; fall back to defaults
-		}
+    // User preferences
+    try {
+      const rawPrefs = window.localStorage.getItem(PREFERENCES_STORAGE_KEY)
+      if (rawPrefs) {
+        const parsedPrefs = JSON.parse(rawPrefs) as UserPreferences
+        setUserPreferences({ ...defaultPreferences, ...parsedPrefs })
+      }
+    } catch {
+      // Ignore corrupted preferences; fall back to defaults
+    }
 
-		// Destination
-		try {
-			const rawDestination = window.localStorage.getItem(DESTINATION_STORAGE_KEY)
-			if (rawDestination) {
-				setDestination(rawDestination)
-			}
-		} catch {
-			// Ignore corrupted destination; leave unset
-		}
+    // Destination
+    try {
+      const rawDestination = window.localStorage.getItem(
+        DESTINATION_STORAGE_KEY
+      )
+      if (rawDestination) {
+        setDestination(rawDestination)
+      }
+    } catch {
+      // Ignore corrupted destination; leave unset
+    }
 
-		// Weather
-		try {
-			const rawWeather = window.localStorage.getItem(WEATHER_STORAGE_KEY)
-			if (rawWeather) {
-				const parsedWeather = JSON.parse(rawWeather) as WeatherData
-				setWeatherData(parsedWeather)
-			}
-		} catch {
-			// Ignore corrupted weather cache; user can re-fetch
-		}
-	}, [])
+    // Weather
+    try {
+      const rawWeather = window.localStorage.getItem(WEATHER_STORAGE_KEY)
+      if (rawWeather) {
+        const parsedWeather = JSON.parse(rawWeather) as WeatherData
+        setWeatherData(parsedWeather)
+      }
+    } catch {
+      // Ignore corrupted weather cache; user can re-fetch
+    }
+  }, [])
 
   // Persist todos
   useEffect(() => {
@@ -135,7 +136,10 @@ function Task3() {
     if (typeof window === 'undefined') return
     try {
       if (weatherData) {
-        window.localStorage.setItem(WEATHER_STORAGE_KEY, JSON.stringify(weatherData))
+        window.localStorage.setItem(
+          WEATHER_STORAGE_KEY,
+          JSON.stringify(weatherData)
+        )
       } else {
         window.localStorage.removeItem(WEATHER_STORAGE_KEY)
       }
@@ -159,7 +163,9 @@ function Task3() {
 
   const removeTodoByTitle = (title: string) => {
     const lowered = title.toLowerCase()
-    setTodos((prev) => prev.filter((todo) => todo.title.toLowerCase() !== lowered))
+    setTodos((prev) =>
+      prev.filter((todo) => todo.title.toLowerCase() !== lowered)
+    )
   }
 
   const toggleTodo = (id: string) => {
@@ -180,17 +186,17 @@ function Task3() {
     setDestination(value)
   }
 
-	const loadWeather = async (location: string): Promise<WeatherData | null> => {
-		if (!location.trim()) return null
+  const loadWeather = async (location: string): Promise<WeatherData | null> => {
+    if (!location.trim()) return null
     setIsFetchingWeather(true)
     setWeatherError(null)
     try {
       const data = await fetchWeather(location)
       setWeatherData(data)
-			return data
+      return data
     } catch (error) {
       setWeatherError(error instanceof Error ? error.message : 'Unknown error')
-			return null
+      return null
     } finally {
       setIsFetchingWeather(false)
     }
@@ -221,8 +227,8 @@ function Task3() {
     parameters: [{ name: 'location', type: 'string' }],
     handler: async ({ location }) => {
       handleDestinationChange(location)
-			const data = await loadWeather(location)
-			return data
+      const data = await loadWeather(location)
+      return data
     }
   })
 
@@ -247,7 +253,7 @@ function Task3() {
       <CopilotSidebar
         defaultOpen
         clickOutsideToClose
-				instructions={config.copilotKit.instructions}
+        instructions={config.copilotKit.instructions}
         labels={{
           title: 'Trip planning copilot',
           initial:
@@ -265,12 +271,7 @@ function Task3() {
                   Minimal todo list for planning your next trip.
                 </p>
               </div>
-              <Link
-                to="/"
-                className="rounded-md border border-neutral-700 bg-neutral-900 px-3 py-1.5 text-sm font-medium text-neutral-50 transition-colors hover:bg-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
-              >
-                Home
-              </Link>
+              <HomeButton />
             </header>
 
             <form onSubmit={handleSubmit} className="mt-2 flex gap-3">
@@ -283,7 +284,7 @@ function Task3() {
                   value={newTitle}
                   onChange={(event) => setNewTitle(event.target.value)}
                   placeholder="Add a todo, e.g. Book hotel in Paris"
-                  className="w-full rounded-md border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-neutral-50 placeholder-neutral-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
+                  className="w-full rounded-md border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-neutral-50 placeholder:text-neutral-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
                 />
               </div>
               <button
@@ -308,7 +309,7 @@ function Task3() {
                     type="checkbox"
                     checked={todo.completed}
                     onChange={() => toggleTodo(todo.id)}
-                    className="h-4 w-4 rounded border-neutral-600 bg-neutral-900 text-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
+                    className="size-4 rounded border-neutral-600 bg-neutral-900 text-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
                     aria-label={
                       todo.completed
                         ? `Mark ${todo.title} as incomplete`
@@ -339,7 +340,8 @@ function Task3() {
 
             {todos.length === 0 && (
               <p className="mt-4 text-sm text-neutral-500">
-                No todos yet. Ask the copilot to create a plan for your next trip.
+                No todos yet. Ask the copilot to create a plan for your next
+                trip.
               </p>
             )}
           </section>
@@ -365,9 +367,11 @@ function Task3() {
                   <input
                     id="destination"
                     value={destination}
-                    onChange={(event) => handleDestinationChange(event.target.value)}
+                    onChange={(event) =>
+                      handleDestinationChange(event.target.value)
+                    }
                     placeholder="e.g. Paris"
-                    className="w-full rounded-md border border-neutral-700 bg-neutral-950 px-3 py-1.5 text-xs text-neutral-50 placeholder-neutral-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
+                    className="w-full rounded-md border border-neutral-700 bg-neutral-950 px-3 py-1.5 text-xs text-neutral-50 placeholder:text-neutral-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
                   />
                   <button
                     type="button"
@@ -406,8 +410,8 @@ function Task3() {
                 How to use the copilot
               </h2>
               <p className="mt-2">
-                Use the chat sidebar to ask for a Paris itinerary, remove
-                museum visits, or add weather-safe alternatives. All actions are
+                Use the chat sidebar to ask for a Paris itinerary, remove museum
+                visits, or add weather-safe alternatives. All actions are
                 reflected in this todo list.
               </p>
             </section>
