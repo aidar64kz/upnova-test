@@ -21,12 +21,11 @@ function Home() {
               Welcome!
             </h1>
             <p className="mt-4 text-xl text-gray-500">
-              This is a boilerplate build with Vite, React 18, TypeScript,
-              Vitest, Testing Library, TailwindCSS 3, Eslint and Prettier.
+              Click on the tasks to see the implementation.
             </p>
           </div>
           <div className="my-10">
-            <div className="flex gap-4 flex-wrap">
+            <div className="flex flex-wrap gap-4">
               <Link
                 to="/task1"
                 className="inline-block rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-center font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-700 focus:ring-offset-2"
@@ -82,4 +81,3 @@ function Home() {
 }
 
 export default Home
-
