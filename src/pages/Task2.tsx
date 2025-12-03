@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { Mail, Check } from 'lucide-react'
+import { Mail, Lock } from 'lucide-react'
 
 interface Task2Props {
   correctCode?: string
@@ -164,130 +164,121 @@ export default function Task2({
               </motion.div>
             ) : (
               <motion.div
-                key="check"
+                key="lock"
                 initial={{ scale: 0, rotate: -180, opacity: 0 }}
                 animate={{ scale: 1, rotate: 0, opacity: 1 }}
                 transition={{ duration: 0.4, ease: 'easeOut' }}
               >
-                <Check className="size-12 text-blue-500" strokeWidth={3} />
+                <Lock className="size-12 text-blue-500" strokeWidth={3} />
               </motion.div>
             )}
           </AnimatePresence>
         </motion.div>
 
-        {/* Title and Description */}
-        <h1 className="mb-3 text-center">
-          We&apos;ve emailed you a verification code
-        </h1>
-        <p className="mb-12 text-center text-gray-500">
-          Please enter the code we sent you below.
-        </p>
+        <AnimatePresence>
+          {!isSuccess && (
+            <motion.div
+              key="content"
+              initial={{ opacity: 1, y: 0 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+            >
+              {/* Title and Description */}
+              <h1 className="mb-3 text-center">Correct code is 123456</h1>
+              <p className="mb-12 text-center text-gray-500">
+                Please enter the correct and incorrect code.
+              </p>
 
-        {/* Code Input Boxes */}
-        <motion.div
-          className="mb-8 flex items-center justify-center gap-4"
-          animate={
-            shake
-              ? {
-                x: [0, -10, 10, -10, 10, 0]
-              }
-              : {}
-          }
-          transition={{ duration: 0.5 }}
-        >
-          {code.map((digit, index) => (
-            <div key={index} className="relative">
-              {/* Separator after 3rd box */}
-              {index === 3 && (
-                <div className="absolute -left-6 top-1/2 h-0.5 w-3 -translate-y-1/2 bg-gray-300" />
-              )}
+              {/* Code Input Boxes */}
+              <motion.div
+                className="mb-8 flex items-center justify-center gap-4"
+                animate={shake ? { x: [0, -10, 10, -10, 10, 0] } : {}}
+                transition={{ duration: 0.5 }}
+              >
+                {code.map((digit, index) => (
+                  <div key={index} className="relative">
+                    {/* Separator after 3rd box */}
+                    {index === 3 && (
+                      <div className="absolute -left-6 top-1/2 h-0.5 w-3 -translate-y-1/2 bg-gray-300" />
+                    )}
 
-              <div className="relative">
-                {/* Animated highlight outline */}
-                {activeIndex === index && !isSuccess && (
-                  <motion.div
-                    layoutId="highlight"
-                    className={`absolute inset-0 rounded-2xl ${isError
-                        ? 'border-4 border-red-500'
-                        : 'border-4 border-blue-500'
-                      }`}
-                    transition={{
-                      type: 'spring',
-                      stiffness: 300,
-                      damping: 30
-                    }}
-                  />
+                    <div className="relative">
+                      {/* Animated highlight outline */}
+                      {activeIndex === index && (
+                        <motion.div
+                          layoutId="highlight"
+                          className={`absolute inset-0 z-20 rounded-2xl ${isError
+                              ? 'border-4 border-red-500'
+                              : 'border-4 border-blue-500'
+                            }`}
+                          transition={{
+                            type: 'spring',
+                            stiffness: 300,
+                            damping: 30
+                          }}
+                        />
+                      )}
+
+                      <input
+                        ref={(el) => (inputRefs.current[index] = el)}
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        maxLength={1}
+                        value={digit}
+                        onChange={(e) => handleInput(e, index)}
+                        onKeyDown={(e) => handleKeyDown(e, index)}
+                        onFocus={() => handleFocus(index)}
+                        onPaste={handlePaste}
+                        aria-label={`Verification code digit ${index + 1}`}
+                        className="h-24 w-20 cursor-pointer rounded-2xl border-4 border-transparent bg-gray-100 text-center text-2xl font-semibold text-transparent caret-transparent transition-colors focus:outline-none"
+                      />
+
+                      {/* Animated digit display */}
+                      <AnimatePresence>
+                        {digit && (
+                          <motion.div
+                            initial={{ y: 20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: -20, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="pointer-events-none absolute inset-0 flex items-center justify-center"
+                          >
+                            <span className="text-2xl font-semibold text-gray-900">
+                              {digit}
+                            </span>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </div>
+                ))}
+              </motion.div>
+
+              {/* Error Message */}
+              <AnimatePresence>
+                {isError && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="mb-4 text-center text-red-500"
+                  >
+                    Invalid verification code
+                  </motion.p>
                 )}
+              </AnimatePresence>
 
-                <input
-                  ref={(el) => (inputRefs.current[index] = el)}
-                  type="text"
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                  maxLength={1}
-                  value={digit}
-                  onChange={(e) => handleInput(e, index)}
-                  onKeyDown={(e) => handleKeyDown(e, index)}
-                  onFocus={() => handleFocus(index)}
-                  onPaste={handlePaste}
-                  aria-label={`Verification code digit ${index + 1}`}
-                  className="h-24 w-20 cursor-pointer rounded-2xl border-4 border-transparent bg-gray-100 text-center text-2xl font-semibold text-transparent caret-transparent transition-colors focus:outline-none"
-                />
-
-                {/* Animated digit display */}
-                <AnimatePresence>
-                  {digit && (
-                    <motion.div
-                      initial={{ y: 20, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      exit={{ y: -20, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                      className="pointer-events-none absolute inset-0 flex items-center justify-center"
-                    >
-                      <span className="text-2xl font-semibold text-gray-900">
-                        {digit}
-                      </span>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
-          ))}
-        </motion.div>
-
-        {/* Error Message */}
-        <AnimatePresence>
-          {isError && (
-            <motion.p
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="mb-4 text-center text-red-500"
-            >
-              Invalid verification code
-            </motion.p>
+              {/* Resend Link */}
+              <p className="text-center text-gray-500">
+                Didn&apos;t receive a code?{' '}
+                <button className="text-gray-900 hover:underline">
+                  Resend
+                </button>
+              </p>
+            </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Success Message */}
-        <AnimatePresence>
-          {isSuccess && (
-            <motion.p
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="mb-4 text-center text-green-600"
-            >
-              Verification successful!
-            </motion.p>
-          )}
-        </AnimatePresence>
-
-        {/* Resend Link */}
-        <p className="text-center text-gray-500">
-          Didn&apos;t receive a code?{' '}
-          <button className="text-gray-900 hover:underline">Resend</button>
-        </p>
       </div>
     </div>
   )
