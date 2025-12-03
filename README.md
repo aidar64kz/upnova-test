@@ -1,80 +1,79 @@
-![reactjs-vite-tailwindcss-boilerplate](https://user-images.githubusercontent.com/16243531/217138979-b854309c-4742-4275-a705-f9fec5158217.jpg)
+## Upnova Test – React + Vite + Tailwind
 
-# React Tailwindcss Boilerplate build with Vite
+This project is a React 18 single-page application built with Vite and TypeScript, using TailwindCSS for styling, Vitest + Testing Library for tests, and ESLint + Prettier for code quality.
 
-This is a boilerplate build with Vite, React 18, TypeScript, Vitest, Testing Library, TailwindCSS 3, Eslint and Prettier.
+## Tech stack
 
-## What is inside?
+- **Build tool**: [Vite](https://vitejs.dev)
+- **UI library**: [React](https://react.dev)
+- **Language**: [TypeScript](https://www.typescriptlang.org)
+- **Styling**: [TailwindCSS](https://tailwindcss.com)
+- **Routing**: [React Router](https://reactrouter.com)
+- **Testing**: [Vitest](https://vitest.dev), [Testing Library](https://testing-library.com), [@testing-library/jest-dom](https://github.com/testing-library/jest-dom)
+- **Linting & formatting**: [ESLint](https://eslint.org), [Prettier](https://prettier.io)
 
-This project uses many tools like:
+## Prerequisites
 
-- [Vite](https://vitejs.dev)
-- [ReactJS](https://reactjs.org)
-- [TypeScript](https://www.typescriptlang.org)
-- [Vitest](https://vitest.dev)
-- [Testing Library](https://testing-library.com)
-- [Tailwindcss](https://tailwindcss.com)
-- [Eslint](https://eslint.org)
-- [Prettier](https://prettier.io)
+- **Node.js**: v18+ (recommended)
+- **Package manager**: [pnpm](https://pnpm.io) (`npm install -g pnpm`)
 
-## Getting Started
+## After you clone the repo, go to project root
 
-### Install
+## Install & run
 
-Create the project.
+From the project root:
 
-```bash
-pnpm dlx degit joaopaulomoraes/reactjs-vite-tailwindcss-boilerplate my-app
-```
-
-Access the project directory.
-
-```bash
-cd my-app
-```
-
-Install dependencies.
+- **Install dependencies**
 
 ```bash
 pnpm install
 ```
 
-Serve with hot reload at <http://localhost:5173>.
+- **Start dev server** (hot reload, default `http://localhost:5173`)
 
 ```bash
-pnpm run dev
+pnpm dev
 ```
 
-### Lint
+
+## Linting & type checking
+
+- **Run ESLint**
 
 ```bash
-pnpm run lint
+pnpm lint
 ```
 
-### Typecheck
+- **Run TypeScript type checker**
 
 ```bash
-pnpm run typecheck
+pnpm typecheck
 ```
 
-### Build
+## Testing
+
+- **Run test suite (Vitest, CLI)**
 
 ```bash
-pnpm run build
+pnpm test
 ```
 
-### Test
+- **Run test UI (Vitest UI in the browser)**
 
 ```bash
-pnpm run test
+pnpm test:ui
 ```
 
-View and interact with your tests via UI.
+## Available scripts (summary)
 
-```bash
-pnpm run test:ui
-```
+- **`pnpm dev`**: Start Vite dev server
+- **`pnpm build`**: Type-check and build production bundle
+- **`pnpm serve`**: Preview the production build locally
+- **`pnpm test`**: Run tests via Vitest
+- **`pnpm test:ui`**: Run Vitest with browser UI
+- **`pnpm lint`**: Run ESLint on `src` with `--max-warnings=0`
+- **`pnpm typecheck`**: Run TypeScript compiler in no-emit mode
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the **MIT License**.
