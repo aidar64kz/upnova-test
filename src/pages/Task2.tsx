@@ -207,10 +207,11 @@ export default function Task2({
                       {activeIndex === index && (
                         <motion.div
                           layoutId="highlight"
-                          className={`absolute inset-0 z-20 rounded-2xl ${isError
+                          className={`absolute inset-0 z-20 rounded-2xl ${
+                            isError
                               ? 'border-4 border-red-500'
                               : 'border-4 border-blue-500'
-                            }`}
+                          }`}
                           transition={{
                             type: 'spring',
                             stiffness: 300,
